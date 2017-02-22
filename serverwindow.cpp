@@ -46,17 +46,10 @@ void serverWindow::newConnection() {
     if(clients.size() == 1) {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
-        this->sendToOne(1, "second");
-
-        QThread::sleep(2);
-
-        this->sendToAll("start");
+        sendToAll("start");
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
-
-    if(clients.size() == 2)
-        this->sendToAll("start");
 }
 
 void serverWindow::logOutClient() {
@@ -105,7 +98,7 @@ void serverWindow::sendToAll(const QString &message) {
     out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
 
 
-    for(unsigned int i(0) ; i < clients.size() ; i++) {
+    for(int i(0) ; i < clients.size() ; i++) {
         clients[i]->write(paquet);
     }
 }
