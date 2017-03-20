@@ -1,8 +1,17 @@
 #ifndef SERVERWINDOW_HPP
 #define SERVERWINDOW_HPP
 
+#include "ball.hpp"
+#include "paddle.hpp"
+#include "limit.hpp"
+
 #include <QtWidgets>
 #include <QtNetwork>
+#include <QTimer>
+#include <QGraphicsScene>
+
+#define WIDTH 1000
+#define HEIGHT 640
 
 class serverWindow : public QWidget
 {
@@ -21,6 +30,16 @@ private:
     QTcpServer *server;
     QList<QTcpSocket *> clients;
     quint16 sizeMessage;
+
+    QTimer *timer;
+
+    Ball *ball;
+    Paddle *leftPaddle;
+    Paddle *rightPaddle;
+    Limit *up;
+    Limit *down;
+
+    QGraphicsScene *scene;
 
 signals:
 

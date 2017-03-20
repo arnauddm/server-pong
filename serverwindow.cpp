@@ -28,6 +28,33 @@ serverWindow::serverWindow()
 
     sizeMessage = 0;
 
+    //create ball
+    ball = new Ball(QSize(WIDTH, HEIGHT), 10);
+
+    //create paddle
+    int heightPaddle(150), widthPaddle(15);
+    leftPaddle = new Paddle(0, 0, widthPaddle, heightPaddle);
+    rightPaddle = new Paddle(WIDTH - widthPaddle, 0, widthPaddle, heightPaddle);
+
+
+    //create limit
+    up = new Limit(0, 0, WIDTH, 0);
+    down = new Limit(0, HEIGHT, WIDTH, HEIGHT);
+
+    //create scene and add all elements
+    scene = new QGraphicsScene();
+    scene->addItem(ball);
+    scene->addItem(leftPaddle);
+    scene->addItem(rightPaddle);
+    scene->addItem(up);
+    scene->addItem(down);
+
+    //create timer
+    timer = new QTimer();
+
+    QObject::connect(timer, &QTimer::timeout, [&]{
+        QString str("l:" + QString::number(leftPaddle->getPos()) + "/r:" + QString::number(rightPaddle->getPos()) + "/b:" + QString::number(ball->getX()) + ":" + QString::number(ball->getY()));
+    });
 }
 
 void serverWindow::newConnection() {
@@ -47,6 +74,7 @@ void serverWindow::newConnection() {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
         sendToAll("start");
+        timer->start(200);
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
@@ -83,8 +111,15 @@ void serverWindow::receiveData() {
     QString message;
     in >> message;
 
-    sendToAll(message);
+    //sendToAll(message);
     sizeMessage = 0;
+
+    QStringList fSplit(message.split(":"));
+    if(fSplit.at(0) == "l") {
+        leftPaddle->setPosY(fSplit.at(1).toInt());
+    } else if(fSplit.at(0) == "r") {
+        rightPaddle->setPosY(fSplit.at(1).toInt());
+    }
 }
 
 void serverWindow::sendToAll(const QString &message) {
