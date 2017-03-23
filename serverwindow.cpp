@@ -54,6 +54,8 @@ serverWindow::serverWindow()
 
     QObject::connect(timer, &QTimer::timeout, [&]{
         QString str("l:" + QString::number(leftPaddle->getPos()) + "/r:" + QString::number(rightPaddle->getPos()) + "/b:" + QString::number(ball->getX()) + ":" + QString::number(ball->getY()));
+        std::cout << str.toStdString().c_str() << std::endl;
+        this->sendToAll(str);
     });
 }
 
@@ -74,7 +76,7 @@ void serverWindow::newConnection() {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
         sendToAll("start");
-        timer->start(200);
+        timer->start(1000);
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
@@ -113,6 +115,8 @@ void serverWindow::receiveData() {
 
     //sendToAll(message);
     sizeMessage = 0;
+
+    std::cout << message.toStdString().c_str() << std::endl;
 
     QStringList fSplit(message.split(":"));
     if(fSplit.at(0) == "l") {

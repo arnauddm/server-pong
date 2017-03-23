@@ -19,7 +19,6 @@ class serverWindow : public QWidget
 public:
     serverWindow();
 
-public slots:
     void sendToAll(const QString &message);
     void sendToOne(const int player, const QString &message);
 
@@ -42,8 +41,6 @@ private:
     QGraphicsScene *scene;
 
 signals:
-
-public slots:
 
 private slots:
     void newConnection();
