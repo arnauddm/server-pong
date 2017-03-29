@@ -76,7 +76,7 @@ void serverWindow::newConnection() {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
         sendToAll("start");
-        timer->start(1000);
+        timer->start(200);
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
@@ -115,8 +115,6 @@ void serverWindow::receiveData() {
 
     //sendToAll(message);
     sizeMessage = 0;
-
-    std::cout << message.toStdString().c_str() << std::endl;
 
     QStringList fSplit(message.split(":"));
     if(fSplit.at(0) == "l") {
