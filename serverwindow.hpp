@@ -1,9 +1,7 @@
 #ifndef SERVERWINDOW_HPP
 #define SERVERWINDOW_HPP
 
-#include "ball.hpp"
 #include "paddle.hpp"
-#include "limit.hpp"
 
 #include <QtWidgets>
 #include <QtNetwork>
@@ -32,13 +30,10 @@ private:
 
     QTimer *timer;
 
-    Ball *ball;
     Paddle *leftPaddle;
     Paddle *rightPaddle;
-    Limit *up;
-    Limit *down;
 
-    QGraphicsScene *scene;
+    int value;
 
 signals:
 

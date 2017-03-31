@@ -1,30 +1,18 @@
 #ifndef PADDLE_HPP
 #define PADDLE_HPP
 
-#include <QGraphicsRectItem>
-#include <QKeyEvent>
-#include <QBrush>
-#include <QSize>
 
-class Paddle : public QGraphicsRectItem {
+class Paddle
+{
 public:
-    Paddle(int x, int y, int w, int h);
-
-    void setPosY(uint pos);
-    int getPos();
+    Paddle(const unsigned int _x, const unsigned int _y, const unsigned int _w, const unsigned int _h);
+    void setY(const unsigned int pos);
+    void setX(const unsigned int pos);
+    unsigned int getX(void);
+    unsigned int getY(void);
 
 private:
-    bool yourPaddle;
-    int height, width;
-
-    QSize sizeView;
-
-signals:
-
-public slots:
-
-protected:
-    void keyPressEvent(QKeyEvent *event);
+    unsigned int x, y, w, h;
 };
 
 #endif // PADDLE_HPP

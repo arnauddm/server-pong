@@ -17,14 +17,10 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     serverwindow.cpp \
-    ball.cpp \
-    paddle.cpp \
-    limit.cpp
+    paddle.cpp
 
 HEADERS  += \
     serverwindow.hpp \
-    ball.hpp \
-    paddle.hpp \
-    limit.hpp
+    paddle.hpp
 
 FORMS    +=

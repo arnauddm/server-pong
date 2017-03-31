@@ -28,35 +28,21 @@ serverWindow::serverWindow()
 
     sizeMessage = 0;
 
-    //create ball
-    ball = new Ball(QSize(WIDTH, HEIGHT), 10);
-
-    //create paddle
-    int heightPaddle(150), widthPaddle(15);
-    leftPaddle = new Paddle(0, 0, widthPaddle, heightPaddle);
-    rightPaddle = new Paddle(WIDTH - widthPaddle, 0, widthPaddle, heightPaddle);
-
-
-    //create limit
-    up = new Limit(0, 0, WIDTH, 0);
-    down = new Limit(0, HEIGHT, WIDTH, HEIGHT);
-
-    //create scene and add all elements
-    scene = new QGraphicsScene();
-    scene->addItem(ball);
-    scene->addItem(leftPaddle);
-    scene->addItem(rightPaddle);
-    scene->addItem(up);
-    scene->addItem(down);
-
     //create timer
     timer = new QTimer();
 
     QObject::connect(timer, &QTimer::timeout, [&]{
-        QString str("l:" + QString::number(leftPaddle->getPos()) + "/r:" + QString::number(rightPaddle->getPos()) + "/b:" + QString::number(ball->getX()) + ":" + QString::number(ball->getY()));
-        std::cout << str.toStdString().c_str() << std::endl;
+        unsigned int lpy(leftPaddle->getY());
+        unsigned int rpy(rightPaddle->getY());
+        QString str(QString::number(lpy) + ":" + QString::number(rpy));
+        //std::cout << str.toStdString().c_str() << std::endl;
         this->sendToAll(str);
     });
+
+    value = 0;
+
+    leftPaddle = new Paddle(0, 0, 10, 100);
+    rightPaddle = new Paddle(this->width() - 10, 0, 10, 100);
 }
 
 void serverWindow::newConnection() {
@@ -76,7 +62,7 @@ void serverWindow::newConnection() {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
         sendToAll("start");
-        timer->start(200);
+        timer->start(100);
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
@@ -113,14 +99,19 @@ void serverWindow::receiveData() {
     QString message;
     in >> message;
 
+    //std::cout << "Message recu : " << message.toStdString().c_str() << std::endl;
+
     //sendToAll(message);
     sizeMessage = 0;
 
-    QStringList fSplit(message.split(":"));
-    if(fSplit.at(0) == "l") {
-        leftPaddle->setPosY(fSplit.at(1).toInt());
-    } else if(fSplit.at(0) == "r") {
-        rightPaddle->setPosY(fSplit.at(1).toInt());
+    QStringList fSPlit(message.split(":"));
+    qDebug() << fSPlit.at(0) << fSPlit.at(1);
+    if(fSPlit.at(0) == "l") {
+        QString ypos(fSPlit.at(1));
+        leftPaddle->setY(ypos.toUInt());
+    } else if(fSPlit.at(0) == "r") {
+        QString ypos(fSPlit.at(1));
+        rightPaddle->setY(ypos.toUInt());
     }
 }
 
