@@ -1,59 +1,65 @@
 #include "ball.hpp"
 
-Ball::Ball(const QSize _window, const int _size) {
-    sizeView = _window;
-
-    //create ball
-    setRect(0, 0, _size, _size);
-    size = _size;
-    setX(sizeView.width() / 2);
-    setY(sizeView.height() / 2);
-
-    //connect timer to function move
-    QTimer *timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), SLOT(move()));
-
-    //start timer
-    timer->start(10);
-
-    //init direction
-    //moveX = (qrand() % 2) - 1;
-    //moveY = (qrand() % 2) - 1;
-
-    moveX = -1;
-    moveY = 1;
-
-    //change color
-    this->setBrush(Qt::black);
-}
-
-void Ball::reset()
+Ball::Ball(const unsigned int _w, const unsigned int _h)
 {
-    this->setPos(this->sizeView.width() / 2, this->sizeView.height() / 2);
+    width = _w;
+    height = _h;
 
+
+    window = QSize(1000, 600);
+
+    //dx = (qrand() % 4) - 2;
+    //dy = (qrand() % 4) - 2;
+    dx = 1;
+    dy = 1;
 }
 
 void Ball::move() {
-    this->setPos(this->x() + 2 * moveX, this->y() + 2 * moveY);
-
-    //detect collide with item
-    QList<QGraphicsItem *> colliding_item = collidingItems();
-    for(int i(0) ; i < colliding_item.size() ; i++) {
-        if(typeid(*(colliding_item[i])) == typeid(Paddle)) {
-            this->moveX *= -1;
-        } else if(typeid(*(colliding_item[i])) == typeid(Limit)) {
-            this->moveY *= -1;
-        }
-    }
-
-    if(this->pos().x() < 0 || this->pos().x() > this->sizeView.width())
-        this->reset();
+    x += dx;
+    y += dy;
 }
 
-int Ball::getX() {
-    return this->x();
+void Ball::restart() {
+    x = window.width() / 2;
+    y = window.height() / 2;
 }
 
-int Ball::getY() {
-    return this->y();
+void Ball::setX(const unsigned int pos) {
+    x = pos;
+}
+
+void Ball::setY(const unsigned int pos) {
+    y = pos;
+}
+
+void Ball::setHeight(const unsigned int value) {
+    height = value;
+}
+
+void Ball::setWidth(const unsigned int value) {
+    width = value;
+}
+
+unsigned int Ball::getX() {
+    return x;
+}
+
+unsigned int Ball::getY() {
+    return y;
+}
+
+unsigned int Ball::getHeight() {
+    return height;
+}
+
+unsigned int Ball::getWidth() {
+    return width;
+}
+
+void Ball::reverseX() {
+    dx *= -1;
+}
+
+void Ball::reverseY() {
+    dy *= -1;
 }

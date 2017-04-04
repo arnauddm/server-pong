@@ -10,6 +10,8 @@ public:
     void setX(const unsigned int pos);
     unsigned int getX(void);
     unsigned int getY(void);
+    unsigned int getWidth(void);
+    unsigned int getHeight(void);
 
 private:
     unsigned int x, y, w, h;

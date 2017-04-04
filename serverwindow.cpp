@@ -32,17 +32,15 @@ serverWindow::serverWindow()
     timer = new QTimer();
 
     QObject::connect(timer, &QTimer::timeout, [&]{
-        unsigned int lpy(leftPaddle->getY());
-        unsigned int rpy(rightPaddle->getY());
-        QString str(QString::number(lpy) + ":" + QString::number(rpy));
-        //std::cout << str.toStdString().c_str() << std::endl;
-        this->sendToAll(str);
+        this->updateAndSendPosition();
+        qDebug() << ball->getX() << ball->getY();
     });
 
     value = 0;
 
     leftPaddle = new Paddle(0, 0, 10, 100);
     rightPaddle = new Paddle(this->width() - 10, 0, 10, 100);
+    ball = new Ball(40, 40);
 }
 
 void serverWindow::newConnection() {
@@ -61,8 +59,9 @@ void serverWindow::newConnection() {
     if(clients.size() == 1) {
         this->sendToOne(0, "first");
     } else if(clients.size() == 2) {
+        ball->restart();
         sendToAll("start");
-        timer->start(100);
+        timer->start(10);
     }
 
     std::cout << "Taille : " << clients.size() << std::endl;
@@ -105,7 +104,7 @@ void serverWindow::receiveData() {
     sizeMessage = 0;
 
     QStringList fSPlit(message.split(":"));
-    qDebug() << fSPlit.at(0) << fSPlit.at(1);
+    //qDebug() << fSPlit.at(0) << fSPlit.at(1);
     if(fSPlit.at(0) == "l") {
         QString ypos(fSPlit.at(1));
         leftPaddle->setY(ypos.toUInt());
@@ -144,4 +143,35 @@ void serverWindow::sendToOne(const int player, const QString &message)
 
 
     clients[player]->write(paquet);
+}
+
+void serverWindow::updateAndSendPosition() {
+    ball->move();
+
+    if(ball->getX() <= 0) {
+        if(ball->getY() >= leftPaddle->getY() && ball->getY() <= leftPaddle->getY() + leftPaddle->getHeight()) {
+            ball->reverseX();
+        } else {
+            ball->restart();
+        }
+    }
+
+    if(ball->getX() + ball->getWidth() > WIDTH) {
+        if(ball->getY() > rightPaddle->getY() && ball->getY() < rightPaddle->getY() + rightPaddle->getHeight()) {
+            ball->reverseX();
+        } else {
+            ball->restart();
+        }
+    }
+
+    if(ball->getY() < 0 || ball->getY() + ball->getHeight() > HEIGHT) {
+        ball->reverseY();
+    }
+
+    unsigned int lpy(leftPaddle->getY());
+    unsigned int rpy(rightPaddle->getY());
+    unsigned int bx(ball->getX());
+    unsigned int by(ball->getY());
+    QString str(QString::number(lpy) + ":" + QString::number(rpy) + ":" + QString::number(bx) + ":" + QString::number(by));
+    this->sendToAll(str);
 }

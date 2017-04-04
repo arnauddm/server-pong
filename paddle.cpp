@@ -23,3 +23,11 @@ unsigned int Paddle::getX(void) {
 unsigned int Paddle::getY(void) {
     return y;
 }
+
+unsigned int Paddle::getWidth(void) {
+    return w;
+}
+
+unsigned int Paddle::getHeight(void) {
+    return h;
+}

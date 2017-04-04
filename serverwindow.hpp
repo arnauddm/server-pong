@@ -2,6 +2,7 @@
 #define SERVERWINDOW_HPP
 
 #include "paddle.hpp"
+#include "ball.hpp"
 
 #include <QtWidgets>
 #include <QtNetwork>
@@ -32,6 +33,7 @@ private:
 
     Paddle *leftPaddle;
     Paddle *rightPaddle;
+    Ball *ball;
 
     int value;
 
@@ -41,6 +43,7 @@ private slots:
     void newConnection();
     void receiveData();
     void logOutClient();
+    void updateAndSendPosition();
 };
 
 #endif // SERVERWINDOW_HPP

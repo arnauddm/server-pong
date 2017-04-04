@@ -1,34 +1,37 @@
 #ifndef BALL_HPP
 #define BALL_HPP
 
-#include "paddle.hpp"
-#include "limit.hpp"
-
-#include <QObject>
-#include <QGraphicsEllipseItem>
-#include <QTimer>
-#include <QGraphicsView>
-#include <QBrush>
-#include <QList>
 #include <QSize>
 
-class Ball : public QObject, public QGraphicsEllipseItem {
-    Q_OBJECT
-public:
-    Ball(const QSize _window, const int _size);
+#include <QtMath>
+#include <qmath.h>
+#include <QtGlobal>
 
-    void reset();
-    int getX();
-    int getY();
+class Ball
+{
+public:
+    Ball(const unsigned int _w, const unsigned int _h);
+
+    void move();
+    void restart();
+    void reverseX();
+    void reverseY();
+
+    void setX(const unsigned int pos);
+    void setY(const unsigned int pos);
+    void setHeight(const unsigned int value);
+    void setWidth(const unsigned int value);
+
+    unsigned int getX();
+    unsigned int getY();
+    unsigned int getHeight();
+    unsigned int getWidth();
 
 private:
-    int moveX, moveY, size;
-    QSize sizeView;
+    int x, y, width, height;
+    int dx, dy;
+    QSize window;
 
-signals:
-
-private slots:
-    void move();
 };
 
 #endif // BALL_HPP
